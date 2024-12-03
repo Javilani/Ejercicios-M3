@@ -1,7 +1,13 @@
 
-# Taller 2 - Módulo 3
+# Ejercicios Módulo 3
 
-## Taller 1
+# Menú de Navegación
+
+- [Taller 1](#taller-1)
+- [Taller 2](#taller-2)
+- [Laboratorio 1](#laboratorio-1)
+
+# Taller 1
 
 ### Decisión sobre el uso de JavaScript avanzado o TypeScript
 Al analizar la viabilidad de implementar JavaScript (JS) o TypeScript (TS) en el desarrollo del proyecto del hospital Akilar, se consideraron las siguientes observaciones:
@@ -18,7 +24,7 @@ El desarrollador tiene experiencia trabajando con JS y se siente más cómodo ut
 **Conclusión:**
 Se decidió continuar utilizando JavaScript para este proyecto, ya que se adapta mejor tanto al tamaño del proyecto como a las habilidades del desarrollador, asegurando un desarrollo más eficiente en el corto plazo. TypeScript podría considerarse en futuras expansiones del proyecto si su complejidad aumenta significativamente.
 
-## Taller 2
+# Taller 2
 
 ### Event Loop en JavaScript
 JavaScript es un lenguaje single-threaded, lo que significa que solo puede ejecutar una operación a la vez en un solo hilo de ejecución. Sin embargo, debido a su naturaleza asincrónica, JavaScript puede manejar múltiples operaciones simultáneamente sin bloquear el hilo principal, gracias al event loop. El event loop es el mecanismo que permite que JavaScript gestione tareas de manera no bloqueante.
@@ -63,6 +69,163 @@ El `debugger` es utilizado en `appContacto.js` para detener la ejecución del c�
 #### Manejo de Errores con `try/catch`:
 El bloque `try/catch` también implementado en `appContacto.js` se usa para capturar cualquier error que ocurra durante la ejecución del código. Si se produce un error (por ejemplo, si el formato del correo electrónico no es válido o si algún campo está vacío), el bloque catch captura el error y muestra un mensaje al usuario indicando lo que salió mal.
 
+# Laboratorio 1
+
+## Gestión de Pacientes, Citas y Equipo Médico
+
+### Complejidad de los Algoritmos
+**Big-O y Complejidad Ciclomática**
+1. **Agregar Paciente:**
+
+- Complejidad Big-O: 𝑂(1) (agregar un elemento al final de un arreglo es constante).
+- Ciclomática: Baja, con una sola decisión condicional para validar el nombre.
+2. **Atender Paciente:**
+
+- Complejidad Big-O: 𝑂(𝑛), ya que al usar shift() se deben desplazar los elementos restantes en el arreglo.
+- Ciclomática: Baja, con una única decisión condicional.
+3. **Ordenar Doctores:**
+
+- Complejidad Big-O: 𝑂(𝑛log𝑛), debido al algoritmo de ordenación utilizado por .sort().
+- Ciclomática: Moderada, ya que implica un bucle y funciones comparativas.
+4. **Buscar Doctor:**
+
+- Complejidad Big-O: 𝑂(𝑛), donde 𝑛 es el número de doctores, ya que utiliza find() para recorrer la lista.
+- Ciclomática: Baja, con un único condicional para verificar si se encontró el doctor.
+5. **Recorrer Doctores:**
+
+- Complejidad Big-O: 𝑂(𝑛), ya que se recorre el arreglo completo de doctores.
+- Ciclomática: Baja, con bucles simples y sin decisiones complejas.
+6. **Cargar Datos desde JSON:**
+
+- Complejidad Big-O: 𝑂(𝑛), donde 𝑛 es el número de elementos en el JSON.
+- Ciclomática: Baja, ya que implica operaciones secuenciales.
+
+### Implementación de Objetos JSON
+El archivo `equipoMedico.json` contiene los datos del equipo médico organizados en dos categorías principales: doctores y enfermeros. Cada doctor tiene propiedades como nombre, especialidad, años de experiencia, y detalles anidados (horarios y contacto).
+
+#### Operaciones Realizadas
+
+1. **Clonación:**
+
+- Se realiza una copia profunda del arreglo de doctores utilizando JSON.parse(JSON.stringify(obj)), garantizando que los cambios realizados en la copia no afecten al original.
+- Ejemplo:
+
+        const doctoresClonados = JSON.parse(JSON.stringify(data.doctores));
+
+2. **Merge:**
+
+- Combina los datos de doctores con servicios médicos en un solo objeto.
+- Ejemplo:
+
+        const doctoresYServicios = {
+                doctores: data.doctores,
+                servicios: servicios
+        };
+
+3. **Recorrido:**
+
+- Itera sobre los doctores para extraer información y mostrarla en consola o en la interfaz.
+- Ejemplo:
+
+        data.doctores.map(doctor => `Nombre: ${doctor.nombre}, Especialidad: ${doctor.especialidad}`);
+
+## Estructuras de Datos Implementadas
+
+### Arreglos
+
+Los arreglos se utilizan para almacenar listas de pacientes y doctores en el proyecto.
+
+**Operaciones**:
+  - `push()`: Agrega pacientes o doctores al final del arreglo.
+  - `shift()`: Atiende al primer paciente, eliminándolo del inicio del arreglo.
+  - `find()` y `findIndex()`: Permiten buscar elementos específicos dentro del arreglo.
+
+**Ventaja**:
+  - Son simples de implementar y eficientes para acceso secuencial, lo que los hace ideales para manejar listas de pacientes y doctores.
+
+### Colas
+
+Las colas se implementan utilizando arreglos para gestionar la atención de pacientes en orden.
+
+**Operaciones**:
+  - `push()`: Agrega pacientes al final de la cola.
+  - `shift()`: Atiende al primer paciente, eliminándolo de la cola.
+
+**Ventaja**:
+  - Siguen el principio FIFO (First In, First Out), lo que es ideal para simular el flujo de atención de pacientes.
+
+### Clases
+
+La clase `Paciente` encapsula la lógica para crear y gestionar pacientes como objetos, mejorando la organización y modularidad del código.
+
+**Ventaja**:
+  - Facilita la extensión y reutilización del código, permitiendo agregar nuevos métodos y propiedades relacionadas con los pacientes de forma más sencilla.
+
+### Descripción de los Algoritmos Implementados
+
+1. **Reservar Cita**
+- Descripción: Solicita y valida información del paciente (nombre, edad, correo electrónico).
+- Complejidad: 𝑂(1) para cada entrada validada.
+- Ejemplo de código:
+
+        function obtenerNombre() {
+            let nombre;
+            while (true) {
+                nombre = prompt("Nombre del paciente: ");
+                if (nombre.trim() !== "") return nombre;
+               alert("El nombre no puede estar vacío.");
+            }
+        }
+
+2. **Buscar Doctor**
+- Descripción: Encuentra un doctor en el arreglo basado en su nombre.
+- Complejidad: 𝑂(𝑛).
+- Ejemplo de código:
+
+        const encontrado = doctores.find(doctor => doctor.nombre.toLowerCase().includes(nombreBuscado.toLowerCase()));
+
+
+3. **Mostrar Doctores**
+- Descripción: Itera sobre el arreglo de doctores y actualiza un elemento HTML con la lista.
+- Complejidad: 𝑂(𝑛).
+- Ejemplo de código:
+
+        doctores.forEach((doctor, index) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `Doctor ${index + 1}: Nombre: ${doctor.nombre}, Especialidad: ${doctor.especialidad}`;
+            listaElement.appendChild(listItem);
+        });
+
+
+4. **Ordenar Doctores**
+- Descripción: Ordena el arreglo de doctores por años de experiencia en orden descendente.
+- Complejidad: 𝑂(𝑛log⁡𝑛).
+- Ejemplo de código:
+
+        doctores.sort((a, b) => b.aniosExperiencia - a.aniosExperiencia);
+
+
+5. **Clonación**
+- Descripción: Realiza una copia profunda del arreglo de doctores.
+- Complejidad: 𝑂(𝑛).
+- Ejemplo de código:
+
+        const doctoresClonados = JSON.parse(JSON.stringify(data.doctores));
+
+6. **Merge**
+- Descripción: Fusiona datos de doctores y servicios médicos.
+- Complejidad: 𝑂(𝑛+𝑚), donde 𝑛 es el número de doctores y 𝑚 el número de servicios.
+- Ejemplo de código:
+
+        const doctoresYServicios = {
+            doctores: data.doctores,
+            servicios: servicios
+        };
+
+
+
+
+
 ## Instrucciones para Visualizar el Proyecto
 
 ### Requisitos Previos
@@ -88,19 +251,18 @@ El bloque `try/catch` también implementado en `appContacto.js` se usa para capt
 - Utiliza Live Server (si estás trabajando en VS Code) para ver la página en tu navegador
 - Haz clic derecho sobre `index.html`.
 - Selecciona "Open with Live Server" para iniciar la página en tu navegador.
+
 ## Screenshots
 
-Mensaje de alert al completar los datos de "Reservar cita":
-![App Screenshot](https://res.cloudinary.com/de2p3kdgv/image/upload/v1733003589/boton-reservar-cita_krx6nc.png)
+- Implementación de barra de búsqueda de doctor por nombre:
+![App Screenshot](https://res.cloudinary.com/de2p3kdgv/image/upload/v1733240664/buscar-doctor_nbamxf.png)
 
 
-Implementación de un filter y un forEach al apretar el botón de mostrar doctores o enfermeros:
-![App Screenshot](https://res.cloudinary.com/de2p3kdgv/image/upload/v1733003598/boton-doctores_shcsdb.png)
+- Gestión de Pacientes:
+![App Screenshot](https://res.cloudinary.com/de2p3kdgv/image/upload/v1733240645/pacientes_pgyjla.png)
 
-![App Screenshot](https://res.cloudinary.com/de2p3kdgv/image/upload/v1733003604/boton-enf_pzqw6d.png)
-
-Mensaje de alert al enviar correctamente el formulario (apretar el botón "Enviar"):
-![App Screenshot](https://res.cloudinary.com/de2p3kdgv/image/upload/v1733003610/contacto-envio-form_lc03y0.png)
+- Gestión de Citas, Doctores y manipulación del .JSON
+![App Screenshot](https://res.cloudinary.com/de2p3kdgv/image/upload/v1733240652/administrador_lkpaho.png)
 ## Authors
 
 - Javier Lagos
