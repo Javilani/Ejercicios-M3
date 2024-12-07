@@ -6,6 +6,7 @@
 - [Taller 1](#taller-1)
 - [Taller 2](#taller-2)
 - [Laboratorio 1](#laboratorio-1)
+- [Laboratorio 2](#laboratorio-2)
 
 # Taller 1
 
@@ -222,6 +223,151 @@ La clase `Paciente` encapsula la lógica para crear y gestionar pacientes como o
             servicios: servicios
         };
 
+# Laboratorio 2
+
+## Programación funcional de JavaScript
+
+### Currying
+El **currying** es una técnica que permite transformar una función que toma múltiples argumentos en una serie de funciones que toman un solo argumento.
+
+**Ejemplo Implementado:** La función `calcularCostoConsulta` utilizada en el archivo `appContacto.js`, implementa currying para calcular el costo total de las consultas de un paciente.
+
+        const calcularCostoConsulta = (precioConsulta) => (numeroConsultas) => precioConsulta * numeroConsultas;
+
+        // Uso:
+        const costoPorConsulta = calcularCostoConsulta(20000);
+        const costoTotal = costoPorConsulta(5); // Resultado: 100000
+
+
+### Funciones Flecha
+Las **funciones flecha** ofrecen una sintaxis concisa y mejoran la legibilidad del código. En este proyecto, se utilizaron para calcular el tiempo promedio de espera de los pacientes.
+
+**Ejemplo Implementado:**
+
+        const calcularPromedioEspera = (tiempos) => 
+                tiempos.reduce((total, tiempo) => total + tiempo, 0) / tiempos.length;
+
+        // Uso:
+        const tiempos = [15, 20, 10, 25];
+        const promedio = calcularPromedioEspera(tiempos); // Resultado: 17.5
+
+### Recursión
+La **recursión** se emplea para calcular de forma acumulativa un resultado al dividir un problema en subproblemas más pequeños.
+
+**Ejemplo Implementado:** La función `calcularHorasSemanalesRecursivo` implementada en `appAdmin.js` calcula de forma recursiva las horas de consulta disponibles para un doctor a lo largo de la semana.
+
+        function calcularHorasSemanalesRecursivo(horarios, dias, index = 0, total = 0) {
+                if (index >= dias.length) return total; // Caso base
+                const horasDia = horarios[dias[index]] ? calcularHoras(horarios[dias[index]]) : 0;
+                return calcularHorasSemanalesRecursivo(horarios, dias, index + 1, total + horasDia);
+        }
+
+        // Uso:
+        const horarios = { lunes: "09:00 - 13:00", miércoles: "14:00 - 18:00" };
+        const diasSemana = ["lunes", "miércoles"];
+        const totalHoras = calcularHorasSemanalesRecursivo(horarios, diasSemana); // Resultado: 8
+
+### Composición de Funciones
+La **composición de funciones** combina varias funciones simples para formar una función más compleja. Esto ayuda a crear cadenas de operaciones reutilizables.
+
+**Ejemplo Implementado:** La función `compose(f, g)` toma dos funciones y las combina. La primera función (`f`) se aplica al resultado de la segunda función (`g`). En este caso, se utiliza para combinar el cálculo del costo con el descuento.
+
+        function compose(f, g) {
+                return function(x) {
+                        return f(g(x));
+        };
+}
+
+
+
+## Programación Orientada a Eventos y Programación Asíncrona
+
+### Funcionalidades Implementadas
+
+#### **1. Captura de Eventos del Usuario**
+#### a. Envío del Formulario de Contacto
+- Se implementó un **listener** que detecta el envío del formulario en la página de contacto.
+- Al enviar el formulario, se captura el evento `submit`, se previene el comportamiento predeterminado del navegador, y se muestra un mensaje de confirmación al usuario, confirmando que su mensaje fue recibido exitosamente.
+
+#### b. Evento Personalizado: Llegada de un Nuevo Paciente
+- Se creó un evento personalizado nuevoPaciente que simula la llegada de un paciente.
+- Al hacer clic en el botón Agregar Paciente, se solicita el nombre del paciente, se agrega a la cola y se dispara el evento.
+- Un escuchador captura el evento y muestra una notificación con el nombre del paciente agregado.
+
+
+#### **2. Asincronía y Manejo de Datos**
+#### a. Simulación de Llamadas a una API REST
+- Se implementó una función asíncrona utilizando `async/await` para simular la obtención de datos de los doctores desde una API REST.
+- La función utiliza `Promise` para manejar los casos de éxito (donde se obtienen los datos correctamente) o fallo (donde ocurre un error).
+
+#### b. Manejo de Errores con `try/catch`
+- La obtención de datos asíncronos está envuelta en un bloque `try/catch` que asegura que cualquier error durante la simulación sea capturado.
+- Si ocurre un error, se muestra un mensaje informativo al usuario y se registra el error en la consola para depuración.
+
+#### c. Callback Personalizado para Manejo de Errores
+- Se definió un callback (`onErrorCallback`) que se invoca específicamente cuando falla la obtención de datos.
+- Este callback recibe el error como argumento y lo procesa mostrando un mensaje personalizado en la consola.
+- Este diseño modular permite que el manejo de errores sea reutilizable en diferentes partes del proyecto.
+
+
+## Programación Orientada a Objetos en JavaScript
+
+En el archivo `estructura.js` se implementaron clases en JavaScript utilizando conceptos fundamentales de programación orientada a objetos (POO) como herencia, encapsulación, y polimorfismo. El código incluye una clase base Doctor y una subclase Cirujano que extiende las funcionalidades de la clase base.
+
+### 📚 Estructura del código
+
+#### Clase `Doctor`
+
+**Propiedades:**
+
+- nombre: Nombre del doctor.
+- especialidad: Especialidad del doctor.
+- aniosDeExperiencia (encapsulada): Simulada como privada usando un closure.
+
+**Métodos:**
+
+- mostrarInformacion(): Retorna la información básica del doctor.
+- atenderPaciente(numeroDePacientes): Incrementa el número de pacientes atendidos.
+- obtenerTotalPacientes(): Devuelve el total de pacientes atendidos.
+- calcularConsultasRealizadas(): Método genérico que puede ser sobrescrito por las subclases.
+
+**Encapsulación:** 
+- La propiedad aniosDeExperiencia está protegida mediante un getter (getAniosDeExperiencia) y un setter (setAniosDeExperiencia). Esto asegura que solo valores válidos sean asignados.
+
+
+#### Subclase `Cirujano`
+
+La clase `Cirujano` extiende `Doctor` e incluye funcionalidades específicas para médicos especializados en cirugía:
+
+**Propiedades adicionales:**
+
+- `especialidadQuirurgica`: Campo que define el tipo de cirugía en el que se especializa.
+- `operacionesRealizadas`: Número de operaciones realizadas por el cirujano.
+**Métodos sobrescritos (polimorfismo):**
+
+- `calcularConsultasRealizadas()`: Calcula el número de operaciones realizadas en lugar de consultas médicas.
+
+**Métodos adicionales:**
+
+- `registrarOperacion(cantidad)`: Permite registrar el número de operaciones realizadas, asegurando que no se introduzcan valores negativos.
+
+
+### 🔑 Conceptos aplicados
+
+#### 1. Encapsulación
+La propiedad aniosDeExperiencia está protegida mediante un closure en la clase Doctor. Solo puede ser accedida o modificada a través de métodos específicos (getAniosDeExperiencia y setAniosDeExperiencia).
+
+#### 2. Herencia
+La clase Cirujano extiende la clase Doctor, heredando todas sus propiedades y métodos. Esto permite que Cirujano reutilice y extienda las funcionalidades definidas en Doctor.
+
+#### 3. Polimorfismo
+El método calcularConsultasRealizadas es sobrescrito en Cirujano para adaptarlo al contexto de la subclase. En lugar de calcular consultas, devuelve el número de operaciones realizadas.
+
+
+
+
+
+
 
 
 
@@ -254,15 +400,14 @@ La clase `Paciente` encapsula la lógica para crear y gestionar pacientes como o
 
 ## Screenshots
 
-- Implementación de barra de búsqueda de doctor por nombre:
-![App Screenshot](https://res.cloudinary.com/de2p3kdgv/image/upload/v1733240664/buscar-doctor_nbamxf.png)
+- Implementación cálculo de horas disponibles por Doctor:
+![App Screenshot](https://res.cloudinary.com/de2p3kdgv/image/upload/v1733600213/horas-disponibles_d7xooj.png)
 
 
-- Gestión de Pacientes:
-![App Screenshot](https://res.cloudinary.com/de2p3kdgv/image/upload/v1733240645/pacientes_pgyjla.png)
+- Cálculo de Costos y Promedio de espera:
+![App Screenshot](https://res.cloudinary.com/de2p3kdgv/image/upload/v1733600219/promEspera-Costos_dxb0hi.png)
 
-- Gestión de Citas, Doctores y manipulación del .JSON
-![App Screenshot](https://res.cloudinary.com/de2p3kdgv/image/upload/v1733240652/administrador_lkpaho.png)
+
 ## Authors
 
 - Javier Lagos
